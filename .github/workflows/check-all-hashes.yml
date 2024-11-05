@@ -1,0 +1,56 @@
+name: Verify Blake2b-256 Hashes
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+
+jobs:
+  verify_hashes:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Verify .jsold file hashes
+        run: |
+          # Directories to check
+          directories=( "./mainnet" "./preprod" "./preview" )
+
+          # Loop over each specified directory
+          for base_dir in "${directories[@]}"; do
+            # Find all .jsold files within the directory
+            find "$base_dir" -type f -name "*.jsold" | while read -r jsold_file; do
+              # Compute the blake2b-256 hash of the .jsold file
+              calculated_hash=$(b2sum -l 256 "$jsold_file" | awk '{ print $1 }')
+
+              # Determine the README.md file path in the same directory
+              readme_path="$(dirname "$jsold_file")/README.md"
+
+              if [[ -f "$readme_path" ]]; then
+                # Extract the hash from the README.md file
+                expected_hash=$(grep -Po '(?<=Metadata Anchor Hash \(blake2b-256\): `)[a-fA-F0-9]{64}(?=`)' "$readme_path")
+
+                if [[ -n "$expected_hash" ]]; then
+                  # Compare the calculated hash with the expected hash
+                  if [[ "$calculated_hash" == "$expected_hash" ]]; then
+                    echo "✅ Hash match for $jsold_file"
+                  else
+                    echo "❌ Hash mismatch for $jsold_file:"
+                    echo "   Calculated: $calculated_hash"
+                    echo "   Expected: $expected_hash"
+                    exit 1  # Fail the workflow if there's a mismatch
+                  fi
+                else
+                  echo "❌ No hash found in README.md for $jsold_file"
+                  exit 1  # Fail the workflow if no hash is found in README.md
+                fi
+              else
+                echo "❌ README.md not found in $(dirname "$jsold_file")"
+                exit 1  # Fail the workflow if README.md is missing
+              fi
+            done
+          done
+        shell: bash
