@@ -5,7 +5,7 @@
 - Transaction:
 
 - Metadata Anchor Hash (`blake2b-256`): `8b9131c3efe52c747fda90d38930231b3a771ec7e22173ffd37ff42283f1bb18`
-- Metadata Anchor URI: <https://raw.githubusercontent.com/IntersectMBO/governance-actions/refs/heads/main/preview/2024-01-23-const/metadata.jsonld>
+- Metadata Anchor URI: <https://raw.githubusercontent.com/IntersectMBO/governance-actions/refs/heads/main/preview/2025-01-23-const/metadata.jsonld>
 
 ### Details
 
@@ -28,13 +28,13 @@ It is recommended that third parties audit and verify the contents of this direc
 Using `cardano-cli` (without cloning).
 
 ```shell
-cardano-cli hash anchor-data --url https://raw.githubusercontent.com/IntersectMBO/governance-actions/refs/heads/main/preview/2024-12-19-conts/metadata.jsonld
+cardano-cli hash anchor-data --url https://raw.githubusercontent.com/IntersectMBO/governance-actions/refs/heads/main/preview/2025-01-23-const/metadata.jsonld
 ```
 
 Using `b2sum` (without cloning).
 
 ```shell
-curl -s https://raw.githubusercontent.com/IntersectMBO/governance-actions/refs/heads/main/preview/2024-12-19-conts/metadata.jsonld| b2sum -l 256
+curl -s https://raw.githubusercontent.com/IntersectMBO/governance-actions/refs/heads/main/preview/2025-01-23-const/metadata.jsonld | b2sum -l 256
 ```
 
 #### Check action file
